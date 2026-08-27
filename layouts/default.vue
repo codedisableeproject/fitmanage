@@ -100,7 +100,7 @@ const roleLabel = computed(() => ROLE_LABELS[user.value?.role || ''] || user.val
       width="248"
       permanent
       class="sidebar"
-      :class="{ 'sidebar--rail': railMode }"
+      :class="{ 'sidebar--rail': railMode, 'sidebar--hover-capable': supportsHover }"
     >
       <div class="sidebar__brand">
         <div class="sidebar__brand-mark"><i class="mdi mdi-arm-flex-outline" /></div>
@@ -147,38 +147,58 @@ const roleLabel = computed(() => ROLE_LABELS[user.value?.role || ''] || user.val
             <div class="sidebar__tooltip">{{ item.label }}</div>
           </v-menu>
 
-          <!-- Group (punya submenu): flyout ke kanan, baik di mode sidebar
-               penuh maupun rail/icon-only. Parent item SENGAJA nggak
-               punya @click navigasi sendiri (dulu ada bug: klik parent
-               langsung buka child pertama, padahal parent cuma "wadah"
-               doang) — klik/tap parent CUMA buka flyout-nya (lewat
-               v-bind="activatorProps" di bawah, open-on-click default
-               true dari v-menu), user HARUS pilih salah satu child buat
-               navigasi. Flyout SENGAJA nggak buka pas hover doang —
-               harus di-klik dulu (open-on-hover dimatikan total), biar
-               nggak numpuk kebuka sendiri pas cursor cuma lewat. -->
+          <!-- Group (punya submenu): flyout ke kanan (klik) + tooltip
+               label pas hover (rail mode doang, sama kayak item biasa).
+               2 mekanisme ini SENGAJA dipisah jadi 2 komponen berbeda
+               (v-tooltip buat hover-preview, v-menu buat klik-buka-flyout)
+               yang di-nesting di activator yang sama — props dari
+               keduanya digabung (v-bind spread) ke satu v-list-item yang
+               sama, jadi hover & klik jalan independen tanpa saling
+               ganggu. Keduanya render lewat overlay yang di-teleport ke
+               root (bukan CSS position:absolute biasa), jadi kebal dari
+               overflow/clipping punya drawer Vuetify.
+               Parent item SENGAJA nggak punya @click navigasi sendiri
+               (dulu ada bug: klik parent langsung buka child pertama,
+               padahal parent cuma "wadah" doang) — klik/tap parent CUMA
+               buka flyout-nya (open-on-click default true dari v-menu),
+               user HARUS pilih salah satu child buat navigasi. Flyout
+               SENGAJA nggak buka pas hover doang — harus di-klik dulu
+               (open-on-hover dimatikan total), biar nggak numpuk kebuka
+               sendiri pas cursor cuma lewat. -->
           <v-menu
             v-else
             :open-on-hover="false"
             location="end"
             offset="14"
           >
-            <template #activator="{ props: activatorProps }">
-              <v-list-item
-                v-bind="activatorProps"
-                :active="item.children?.some(c => c.key === activeKey) ?? false"
-                class="sidebar__item"
+            <template #activator="{ props: menuActivatorProps }">
+              <v-tooltip
+                :disabled="!railMode || !supportsHover"
+                location="end"
+                offset="10"
+                open-delay="120"
+                close-delay="80"
+                content-class="sidebar__tooltip"
               >
-                <template #prepend>
-                  <span class="sidebar__icon">
-                    <i class="mdi" :class="item.icon" />
-                  </span>
+                <template #activator="{ props: tooltipActivatorProps }">
+                  <v-list-item
+                    v-bind="{ ...menuActivatorProps, ...tooltipActivatorProps }"
+                    :active="item.children?.some(c => c.key === activeKey) ?? false"
+                    class="sidebar__item"
+                  >
+                    <template #prepend>
+                      <span class="sidebar__icon">
+                        <i class="mdi" :class="item.icon" />
+                      </span>
+                    </template>
+                    <v-list-item-title v-if="!railMode" class="sidebar__item-label">{{ item.label }}</v-list-item-title>
+                    <template v-if="!railMode" #append>
+                      <i class="mdi mdi-chevron-right sidebar__chevron" />
+                    </template>
+                  </v-list-item>
                 </template>
-                <v-list-item-title v-if="!railMode" class="sidebar__item-label">{{ item.label }}</v-list-item-title>
-                <template v-if="!railMode" #append>
-                  <i class="mdi mdi-chevron-right sidebar__chevron" />
-                </template>
-              </v-list-item>
+                {{ item.label }}
+              </v-tooltip>
             </template>
 
             <div class="sidebar__flyout">
@@ -489,5 +509,24 @@ const roleLabel = computed(() => ROLE_LABELS[user.value?.role || ''] || user.val
 
   .v-list-item-title { color: vars.$color-sidebar-text-active !important; }
   .sidebar__icon i { color: vars.$color-sidebar-text-active !important; }
+}
+
+// .sidebar__tooltip di sini UNSCOPED sengaja — dipakai lewat prop
+// `content-class` di v-tooltip (lihat blok "Group" di template), yang
+// bikin elemen wrapper-nya digenerate langsung sama Vuetify sendiri
+// (bukan bagian dari template kita), jadi nggak ke-attach atribut scoped
+// (data-v-xxx) dan versi scoped dari class ini (yang dipakai buat tooltip
+// item biasa lewat v-menu) nggak bakal match ke situ. Duplikat definisi
+// singkat di sini biar tetap konsisten secara visual di 2 tempat.
+.sidebar__tooltip {
+  background: vars.$color-bg-surface;
+  border: 1px solid vars.$color-border-strong;
+  border-radius: vars.$radius-sm;
+  padding: 8px 12px !important;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: vars.$color-text-primary;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.32);
 }
 </style>

@@ -227,6 +227,33 @@ paket/instruktur dari situ — itu transaksi yang udah kejadian, cuma data
 kontak (nama/email/telepon) yang bisa diubah, supaya nggak ada risiko
 "kebayar dua kali" atau data transaksi yang nggak konsisten.
 
+## Changelog rev 8
+
+- Fix bug kontras di halaman login pas tema di-switch ke Light/Blue Sky:
+  panel hero KIRI itu backgroundnya sengaja fixed gelap (buat branding,
+  nggak ikut tema dashboard), tapi warna teks/aksen di dalamnya kemarin
+  masih pakai `$color-text-primary` dkk yang ikut berubah sesuai tema
+  aktif. Begitu tema di-switch ke Light/Blue Sky, warna teks itu jadi
+  gelap juga (didesain buat background terang) — ditaruh di atas
+  background yang tetap gelap, jadinya nyaris nggak kebaca.
+  Sekarang semua warna di panel hero (`pages/login.vue`) di-hardcode fix
+  ke token Dark Violet, nggak ikut sistem tema lagi — panel ini "brand-
+  locked", selalu tampil sama persis apa pun tema yang lagi aktif di
+  dashboard. Panel kanan (kartu "Welcome back!") TETAP ikut tema seperti
+  biasa karena emang dirancang adaptif (card putih di tema terang, dst)
+  dan nggak ada masalah kontras di situ.
+
+## Changelog rev 7
+
+- Menu yang punya submenu (Laporan & Analitik, POS) sekarang juga
+  nampilin tooltip label pas hover di rail mode, sama kayak menu biasa —
+  sebelumnya cuma diem aja pas di-hover (nggak ada preview nama menu sama
+  sekali, beda dari menu tanpa submenu yang udah bisa). Dipisah jadi 2
+  komponen independen di activator yang sama: `v-tooltip` buat
+  hover-preview label, `v-menu` (klik doang, sejak rev 6) buat buka
+  flyout submenu — keduanya nggak saling ganggu karena beda event
+  (hover vs klik).
+
 ## Changelog rev 6
 
 - Flyout submenu (Laporan & Analitik, POS) sekarang CUMA kebuka kalau

@@ -94,7 +94,7 @@ async function handleDevLogin(role: UserRole) {
         <div class="login-page__card-icon"><i class="mdi mdi-arm-flex-outline" /></div>
         <h2 class="login-page__welcome">Welcome back!</h2>
         <p class="login-page__welcome-sub">Sign in to access your fitness management dashboard</p>
-        <div class="login-page__rule login-page__rule--center" />
+        <div class="login-page__rule login-page__rule--card" />
 
         <button class="login-page__google-btn" :disabled="loadingGoogle" @click="handleGoogleLogin">
           <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true">
@@ -184,52 +184,67 @@ async function handleDevLogin(role: UserRole) {
   &__brand-mark {
     width: 44px; height: 44px;
     border-radius: $radius-md;
-    background: $gradient-brand;
+    // Hero kiri SENGAJA fixed dark-theme (nggak ikut sistem tema
+    // dinamis) — background-nya hardcode gelap di bawah (&__hero), jadi
+    // semua warna teks/aksen di sini HARUS di-hardcode juga, BUKAN pakai
+    // $color-* (yang berubah sesuai tema aktif dashboard). Kalau pakai
+    // $color-text-primary misalnya, pas tema Light/Blue Sky aktif,
+    // warnanya jadi gelap juga — nyaris invisible di atas hero yang
+    // tetep gelap. Nilai di bawah ini persis sama kayak token Dark
+    // Violet di assets/scss/_theme-tokens.scss, cuma di-hardcode.
+    background: linear-gradient(135deg, #6355D6 0%, #7C6FEA 55%, #5B8DEF 100%);
     display: flex; align-items: center; justify-content: center;
     font-size: 22px; color: #fff;
   }
 
   &__brand-name {
-    font-size: 20px; font-weight: 800; letter-spacing: 0.02em; color: $color-text-primary;
-    &--accent { color: $color-primary; }
+    font-size: 20px; font-weight: 800; letter-spacing: 0.02em; color: #FFFFFF;
+    &--accent { color: #7C6FEA; }
   }
-  &__brand-tagline { font-size: 10px; letter-spacing: 0.18em; color: $color-text-muted; }
+  &__brand-tagline { font-size: 10px; letter-spacing: 0.18em; color: #83829E; }
 
   &__headline {
     font-size: 34px; font-weight: 800; line-height: 1.25; margin: 0 0 20px;
-    color: $color-text-primary;
-    &--accent { color: $color-primary; }
+    color: #FFFFFF;
+    &--accent { color: #7C6FEA; }
   }
 
   &__rule {
     width: 48px; height: 3px; border-radius: 2px;
-    background: $gradient-brand;
+    // Hardcode — ini rule di HERO KIRI (selalu gelap), bukan di kartu
+    // kanan. Kartu kanan pakai modifier &--card di bawah (theme-reactive).
+    background: linear-gradient(135deg, #6355D6 0%, #7C6FEA 55%, #5B8DEF 100%);
     margin-bottom: 20px;
 
-    &--center { margin: 20px auto 24px; }
+    // Dipakai di kartu kanan (ikut tema aktif — beda dari base di atas
+    // yang sengaja fixed buat hero).
+    &--card {
+      background: $gradient-brand;
+      margin: 20px auto 24px;
+    }
   }
 
-  &__lead { font-size: 14px; color: $color-text-secondary; line-height: 1.7; margin: 0 0 32px; max-width: 380px; }
+  &__lead { font-size: 14px; color: #B7B6D6; line-height: 1.7; margin: 0 0 32px; max-width: 380px; }
 
   &__feature-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 18px; }
 
   &__feature {
     display: flex; align-items: center; gap: 14px;
 
-    strong { display: block; font-size: 14px; font-weight: 700; color: $color-text-primary; }
-    small { display: block; font-size: 12px; color: $color-text-muted; margin-top: 2px; }
+    strong { display: block; font-size: 14px; font-weight: 700; color: #FFFFFF; }
+    small { display: block; font-size: 12px; color: #83829E; margin-top: 2px; }
   }
 
   &__feature-icon {
     width: 40px; height: 40px; flex-shrink: 0;
     border-radius: $radius-md;
     background: rgba(124, 111, 234, 0.16);
-    color: $color-primary;
+    color: #7C6FEA;
     display: flex; align-items: center; justify-content: center;
     font-size: 18px;
   }
 
-  &__footer { position: relative; z-index: 1; font-size: 11px; color: $color-text-muted; }
+  &__footer { position: relative; z-index: 1; font-size: 11px; color: #83829E; }
 
   &__panel {
     display: flex; align-items: center; justify-content: center;
