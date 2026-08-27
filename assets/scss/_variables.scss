@@ -1,0 +1,50 @@
+// =========================================================
+// Design tokens — jembatan ke CSS custom property di
+// _theme-tokens.scss. SEMUA komponen base pakai $variable di
+// bawah ini (bukan warna langsung), supaya ganti tema di
+// composables/useAppTheme.ts otomatis kepakai di mana-mana
+// tanpa perlu ubah komponen satu-satu.
+//
+// Kalau mau tambah token warna baru: definisikan CSS var-nya
+// di ke-3 blok tema pada _theme-tokens.scss, baru tambahkan
+// mapping-nya di sini.
+// =========================================================
+
+$color-primary:        var(--color-primary);
+$color-primary-dark:   var(--color-primary-dark);
+$color-primary-light:  var(--color-primary-light);
+$color-primary-glow:   var(--color-primary-glow);
+$color-accent-blue:    var(--color-accent-blue);
+
+$color-sidebar-active-bg:   var(--color-sidebar-active-bg);
+$color-sidebar-text:        var(--color-sidebar-text);
+$color-sidebar-text-active: var(--color-sidebar-text-active);
+$color-sidebar-icon:        var(--color-sidebar-icon);
+
+$color-bg-page:       var(--color-bg-page);
+$color-bg-surface:    var(--color-bg-surface);
+$color-bg-surface-2:  var(--color-bg-surface-2);
+$color-border:         var(--color-border);
+$color-border-strong:  var(--color-border-strong);
+
+$color-text-primary:   var(--color-text-primary);
+$color-text-secondary: var(--color-text-secondary);
+$color-text-muted:     var(--color-text-muted);
+
+$color-danger:  var(--color-danger);
+$color-success: var(--color-success);
+$color-warning: var(--color-warning);
+
+$gradient-brand: var(--gradient-brand);
+
+// Token struktural — sengaja TIDAK ikut berubah per tema (radius,
+// spacing, font tetap sama di semua tema, cuma warna yang beda).
+$radius-sm: 6px;
+$radius-md: 10px;
+$radius-lg: 16px;
+
+$font-family-base: 'Inter', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+
+$header-height: 56px;
+$sidebar-width: 248px;
+$tabbar-height: 40px;

@@ -1,0 +1,7 @@
+{
+  // Nuxt generate file ini otomatis lewat `nuxt prepare` (jalan otomatis
+  // saat `npm install` via script postinstall). Jangan isi compilerOptions
+  // manual di sini — biarkan extend ke .nuxt/tsconfig.json supaya semua
+  // auto-import (ref, computed, definePageMeta, dll) dan alias ~/ dikenali.
+  "extends": "./.nuxt/tsconfig.json"
+}

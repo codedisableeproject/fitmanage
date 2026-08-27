@@ -1,0 +1,41 @@
+@use './theme-tokens';
+@use './variables' as *;
+
+html, body, #__nuxt {
+  height: 100%;
+  background: $color-bg-page;
+  font-family: $font-family-base;
+  color: $color-text-primary;
+  transition: background-color .2s ease, color .2s ease;
+}
+
+.app-surface {
+  background: $color-bg-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+}
+
+.text-muted { color: $color-text-muted !important; }
+.text-secondary-app { color: $color-text-secondary !important; }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb {
+  background: $color-border-strong;
+  border-radius: 8px;
+}
+
+// Override input Vuetify supaya terang di atas background gelap
+.v-field {
+  background: $color-bg-surface-2 !important;
+  color: $color-text-primary !important;
+}
+.v-field__outline { color: $color-border-strong !important; }
+.v-field__input, .v-field input { color: $color-text-primary !important; }
+.v-label { color: $color-text-muted !important; }
+
+// Vuetify default text color kadang berat-sebelah di dark mode (list item,
+// select menu, dsb) — pastikan selalu ambil dari token, bukan default hitam.
+.v-application, .v-list-item-title, .v-list-item-subtitle {
+  color: $color-text-primary;
+}
+.v-overlay .v-list-item-title { color: $color-text-primary !important; }
